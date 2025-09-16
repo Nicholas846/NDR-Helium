@@ -11,3 +11,9 @@ A simple Python implementation of atomic self-consistent field (SCF) / Hartree-F
 To run Run the helium Hartree–Fock SCF calculation with even-tempered optimization:
 
 python main.py
+
+## Roadmap
+
+- [x] Helium atom SCF with even-tempered basis optimization  
+- [x] Generalize to s-only orbitals for arbitrary atoms  
+- [ ] Extend to p-orbitals under spherical symmetry (e.g., Boron 2p averaged as 1/3 occupation)   
