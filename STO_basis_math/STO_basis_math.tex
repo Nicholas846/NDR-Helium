@@ -1,0 +1,650 @@
+\documentclass[a4paper,12pt]{article}
+
+% Packages
+\usepackage{amsmath}    % For advanced math typesetting
+\usepackage{amssymb}    % For math symbols
+\usepackage{physics}    % For quantum mechanics notation
+\usepackage{geometry}   % For page layout
+\usepackage{graphicx}   % For including figures
+\usepackage{hyperref}   % For hyperlinks
+\usepackage{siunitx}  
+\usepackage{amsfonts}
+\usepackage{geometry}
+\usepackage{bm} % For units
+
+\begin{document}
+
+\section*{Hamiltonian}
+
+We consider both the one-electron and two-electron Hamiltonians in atomic units.
+
+\subsection*{One-Electron System (Hydrogen-like Atom)}
+
+\[
+\hat{H}^{(1)} = -\frac{1}{2} \nabla^2 - \frac{Z}{r}
+\]
+\newline
+This consists of the kinetic energy of the electron and the Coulomb attraction to the nucleus.
+
+\subsection*{Two-Electron System (e.g., Helium Atom)}
+
+\[
+\hat{H}^{(2)} = -\frac{1}{2} \nabla_1^2 - \frac{1}{2} \nabla_2^2 - \frac{Z}{r_1} - \frac{Z}{r_2} + \frac{1}{|\mathbf{r}_1 - \mathbf{r}_2|}
+\]
+\newline
+Where:
+\begin{itemize}
+  \item \( \nabla_i^2 \): Laplacian w.r.t. electron \( i \)
+  \item \( r_i \): distance from nucleus to electron \( i \)
+  \item \( \frac{1}{|\mathbf{r}_1 - \mathbf{r}_2|} \): electron-electron repulsion
+\end{itemize}
+
+\section*{Matrix Elements in STO Basis}
+
+Let basis functions be:
+
+\[
+\left| l, m; \zeta \right\rangle = r^{\ell} e^{-\zeta r} Y_{\ell m}(\theta, \phi)
+\]
+\newline
+We define matrix elements for kinetic, potential, and overlap as:
+
+\subsection*{Kinetic Energy}
+
+We define the kinetic energy matrix element as:
+
+\[
+\langle l_1, m_1; \zeta_1 | \hat{T} | l_2, m_2; \zeta_2 \rangle = \delta_{l_1 l_2} \delta_{m_1 m_2} \cdot t(l_1, \zeta_1, \zeta_2)
+\]
+\newline
+Let the radial part be \( \chi(r) = r^\ell e^{-\zeta r} \). In spherical coordinates, the Laplacian becomes:
+
+\[
+\nabla^2 \chi(r) = \frac{1}{r^2} \frac{d}{dr} \left( r^2 \frac{d\chi(r)}{dr} \right) - \frac{\ell(\ell + 1)}{r^2}
+\]
+\newline
+So the expectation value of the kinetic energy is and using integration by part by setting $u = \chi_1(r)$ and $dv = \frac{\partial}{\partial r}(r^2\frac{\partial\chi_2(r))}{\partial r}$
+
+\[
+t(\ell_1,\zeta_1,\zeta_2)  = -\frac{1}{2} \int_0^\infty \chi_1(r) \nabla^2 \chi_2(r) \, r^2 dr
+= \frac{1}{2}\int_0^\infty \nabla\chi_1(r)r^2\nabla\chi_2(r)dr
+\]
+\newline
+Computing the derivative of $\chi_i(r)$ 
+
+\[
+\frac{\partial\chi_i(r)}{\partial r} = -\zeta_ie^{-\zeta_i r}r^{\ell} + \ell e^{-\zeta_ir}r^{\ell-1}
+\]
+\newline
+So the integral becomes
+
+\[
+t(\ell_1,\zeta_1,\zeta_2) = \frac{1}{2}\int_0^\infty e^{-(\zeta_1+\zeta_2)r}(\zeta_1\zeta_2r^{2\ell+2} - \ell(\zeta_1+\zeta_2)r^{2\ell+1} + \ell^2r^{2\ell} - \ell(\ell + 1)r^{2\ell})dr 
+\]
+\newline
+And using gamma function the integral evaluate to 
+
+\[
+t(\ell_1,\zeta_1,\zeta_2) = \frac{1}{2}\left(\zeta_1\zeta_2\frac{\Gamma(2\ell+3)}{(\zeta_1+\zeta_2)^{2\ell+3}}-\ell(\zeta_1+\zeta_2)\frac{\Gamma(2\ell+2)}{(\zeta_1+\zeta_2)^{2\ell+2}} + \ell^2\frac{\Gamma(2\ell + 1)}{(\zeta_1+\zeta_2)^{2\ell + 1)}}  - \ell(\ell-1)\frac{\Gamma(2\ell+1)}{(\zeta_1+\zeta_2)^{2\ell +1}}\right)
+\]
+
+
+
+\subsection*{Potential Energy}
+
+\[
+\langle l_1, m_1; \zeta_1 | \hat{V} | l_2, m_2; \zeta_2 \rangle = \delta_{l_1 l_2} \delta_{m_1 m_2} \cdot v(l_1, \zeta_1, \zeta_2)
+\]
+\newline
+Using:
+
+\[
+v(\ell, \zeta_1, \zeta_2) = -Z \int_0^\infty r^{2\ell + 1} e^{-(\zeta_1 + \zeta_2) r} dr = -Z \cdot \frac{\Gamma(2\ell + 2)}{(\zeta_1 + \zeta_2)^{2\ell + 2}} 
+\]
+
+\subsection*{Overlap}
+
+\[
+\langle l_1, m_1; \zeta_1 | l_2, m_2; \zeta_2 \rangle = \delta_{l_1 l_2} \delta_{m_1 m_2} \cdot s(l_1, \zeta_1, \zeta_2)
+\]
+
+\[
+s(\ell, \zeta_1, \zeta_2) = \int_0^\infty r^{2\ell + 2} e^{-(\zeta_1 + \zeta_2) r} dr = \frac{\Gamma(2\ell + 3)}{(\zeta_1 + \zeta_2)^{2\ell + 3}}
+\]
+
+\subsection*{Repulsion Integral}
+\[
+\langle l_1, m_1; \zeta_1; l_2, m_2; \zeta_2 \;|\; l_3, m_3; \zeta_3; l_4, m_4; \zeta_4\rangle 
+\]
+
+\subsubsection*{Spherical (Angular) Part Using 3j Symbols}
+
+We express the angular part of the two-electron repulsion integral using Wigner 3j symbols.  
+The Coulomb operator is expanded as:
+
+\[
+\frac{1}{|\mathbf{r}_1 - \mathbf{r}_2|} 
+= \sum_{l=0}^{\infty} \sum_{m=-l}^{l} 
+\frac{4\pi}{2l+1} 
+\frac{r_<^l}{r_>^{l+1}} 
+Y_{l m}^*(\Omega_1)\, Y_{l m}(\Omega_2).
+\]
+
+The angular part of the integral is:
+
+\[
+A = \sum_{l=0}^{\infty} \sum_{m=-l}^{l} \frac{4\pi}{2l+1}
+\int Y_{l_1 m_1}(\Omega_1)\, Y_{l m}^*(\Omega_1)\, Y_{l_2 m_2}(\Omega_1) \, d\Omega_1 \cdot
+\int Y_{l_3 m_3}(\Omega_2)\, Y_{l m}(\Omega_2)\, Y_{l_4 m_4}(\Omega_2) \, d\Omega_2.
+\]
+
+Each triple product of spherical harmonics is given by:
+
+\[
+\int Y_{l_1 m_1} Y_{l m}^* Y_{l_2 m_2} \, d\Omega =
+\sqrt{ \frac{(2l_1+1)(2l+1)(2l_2+1)}{4\pi} }
+\begin{pmatrix}
+l_1 & l & l_2 \\
+0 & 0 & 0
+\end{pmatrix}
+\begin{pmatrix}
+l_1 & l & l_2 \\
+m_1 & -m & m_2
+\end{pmatrix},
+\]
+
+\[
+\int Y_{l_3 m_3} Y_{l m} Y_{l_4 m_4} \, d\Omega =
+\sqrt{ \frac{(2l_3+1)(2l+1)(2l_4+1)}{4\pi} }    
+\begin{pmatrix}
+l_3 & l & l_4 \\
+0 & 0 & 0
+\end{pmatrix}
+\begin{pmatrix}
+l_3 & l & l_4 \\
+m_3 & m & m_4
+\end{pmatrix}.
+\]
+
+Thus, the full angular factor becomes:
+
+\[
+A = \sum_{l = 0}^\infty \sum_{m=-l}^{l}
+\sqrt{(2l_1 + 1)(2l_2 + 1)(2l_3 + 1)(2l_4 + 1)}
+\begin{pmatrix}
+l_1 & l & l_2 \\
+0 & 0 & 0
+\end{pmatrix}
+\begin{pmatrix}
+l_1 & l & l_2 \\
+m_1 & -m & m_2
+\end{pmatrix}
+\begin{pmatrix}
+l_3 & l & l_4 \\
+0 & 0 & 0
+\end{pmatrix}
+\begin{pmatrix}
+l_3 & l & l_4 \\
+m_3 & m & m_4
+\end{pmatrix}.
+\]
+
+\subsubsection*{Radial Part of the Two-Electron Repulsion Integral}
+
+Define:
+\[
+a = l_1 + l_2 + 2, \quad 
+b = l_3 + l_4 + 2, \quad 
+p = \zeta_1 + \zeta_2, \quad 
+q = \zeta_3 + \zeta_4.
+\]
+
+The radial integral is:
+
+\[
+I = \int_0^\infty\int_0^\infty 
+\frac{r_<^l}{r_>^{l+1}}\, r_1^a r_2^b 
+e^{-p r_1 - q r_2} \, dr_1 dr_2.
+\]
+
+We break into two regions.
+
+\paragraph{Region I: \( r_1 < r_2 \)}
+
+\[
+I_1 =  \frac{1}{r_2^{l+1}}
+\int_0^{r_2} dr_1 \, r_1^{a + l} e^{-p r_1}.
+\]
+
+With the substitution \(t = pr_1\):
+
+\[
+I_1 = \frac{1}{r_2^{l+1}}\frac{1}{p^{a+l+1}}
+\gamma(a+l+1, pr_2),
+\]
+
+where \(\gamma(s,x)\) is the lower incomplete gamma function.
+
+\paragraph{Region II: \( r_2 < r_1 \)}
+
+\[
+I_2 = \int_{r_2}^{\infty} dr_1 \, r_1^{a} e^{-p r_1} \frac{r_2^l}{r_1^{l+1}}.
+\]
+
+With the substitution \(t = pr_1\):
+
+\[
+I_2 = \frac{r_2^l}{p^{a-l}}
+\Gamma(a-l, pr_2),
+\]
+
+where \(\Gamma(s,x)\) is the upper incomplete gamma function.
+
+\paragraph{Final Expression}
+
+\[
+I =  \int_0^\infty \left(I_1 + I_2\right)\, e^{-q r_2}\, r_2^b \, dr_2.
+\]
+
+
+\section*{Verification with Simple Molecules}
+We use a few simple well known answer to verify the above integral
+\subsection*{$1s$ orbital hydrogen}
+For hydrogen in $1s$ orbital we set $\zeta_1 = \zeta_2 = 1$, $Z = 1$ and $\ell = 0$
+\[
+t(\ell, \zeta_1,\zeta_2) = \frac{1}{2}\left(\frac{\Gamma(3)}{2^3}\right) = \frac{1}{2}\frac{2!}{8} = \frac{1}{8}
+\]
+
+\[
+v(\ell,\zeta_1,\zeta_2) = -\frac{\Gamma(2)}{2^2} = -\frac{1}{4}
+\]
+
+\[
+s(\ell,\zeta_1,\zeta_2) = \frac{\Gamma(3)}{2^3} = \frac{2}{8} = \frac{1}{4}
+\]
+\newline
+to extract $\langle V\rangle$ and $\langle T\rangle$ we need to divide $v, t$ by $s$, so
+\[
+\langle T\rangle = \frac{1/8}{1/4} = \frac{1}{2}
+\]
+
+\[
+\langle V\rangle = \frac{-1/4}{1/4} = -1
+\]
+\newline
+Thus our energy for ground state hydrogen is 
+
+\[
+E = \frac{1}{2} - 1 = -\frac{1}{2} \approx -13\text{ eV}
+\]
+
+\subsection*{Solving generalized Eigenvalue Problem for hydrogen with $2$ different $\zeta_i$ values }
+Consider two basis function $\chi_1(r) = r^\ell e^{-\zeta_ir}$ for $i= 1,2$ $\ell = 0$ and $Z = 1$ , we want to solve
+\[
+\textbf{H}\vec{c} = E\textbf{S}\vec{c}
+\]
+\newline
+We construct the $\textbf{S}$ and $\textbf{H}$ matrix
+
+\[
+\textbf{S} = 
+\begin{bmatrix}
+    S_{11} & S_{12}\\
+    S_{21} & S_{22}
+\end{bmatrix}
+\]
+
+\[
+\textbf{H} = 
+\begin{bmatrix}
+    H_{11} & H_{12}\\
+    H_{21} & H_{22}
+\end{bmatrix}
+=
+\begin{bmatrix}
+    T_{11} + V_{11} & T_{12} + V_{12}\\
+    T_{21} + V_{21} & T_{22} + V_{22}
+\end{bmatrix}
+\]
+\newline
+Take the determinant and setting it to 0
+
+
+\[
+\det (\textbf{H} - E\textbf{S}) =  (H_{11} - ES_{11})(H_{22} - ES_{22}) - (H_{12} - ES_{12})^2 = 0
+\]
+\newline
+Since $\hat{H}$ is hermitian and our basis set is always real so we can freely switch index, and overlap is also symmetric.
+\newline
+\newline
+Solving the quadratic equation above will yield two different $E$ and thus getting ground state and first excited state
+\section*{Generalized Eigenvalue Problem for $n$ Slater-Type Orbitals}
+
+We now generalize our previous $2 \times 2$ case to a basis of $n$ Slater-type orbitals (STOs), all $s$-type ($\ell = 0$), each with a different exponential decay parameter $\zeta_i$.
+\newline
+The basis functions are:
+\[
+\chi_i(r) = e^{-\zeta_i r}, \quad i = 1, 2, \dots, n
+\]
+\newline
+We construct the $n \times n$ overlap matrix $S$ and Hamiltonian matrix $H$ as follows:
+\[
+S_{ij} = \langle \chi_i | \chi_j \rangle = \int_0^\infty \chi_i(r) \chi_j(r) r^2 dr = \frac{2}{(\zeta_i + \zeta_j)^3}
+\]
+\[
+T_{ij} = \frac{1}{2} \left( \frac{2 \zeta_i \zeta_j}{(\zeta_i + \zeta_j)^3}  \right)
+\]
+\[
+V_{ij} = \langle \chi_i | V | \chi_j \rangle = - \int_0^\infty \chi_i(r) \chi_j(r) r \, dr = -  \frac{2}{(\zeta_i + \zeta_j)^3}
+\]
+\[
+H_{ij} = T_{ij} + V_{ij}
+\]
+\newline
+Thus, we construct:
+\[
+S = \begin{bmatrix}
+S_{11} & S_{12} & \cdots & S_{1n} \\
+S_{21} & S_{22} & \cdots & S_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+S_{n1} & S_{n2} & \cdots & S_{nn}
+\end{bmatrix}, \quad
+H = \begin{bmatrix}
+H_{11} & H_{12} & \cdots & H_{1n} \\
+H_{21} & H_{22} & \cdots & H_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+H_{n1} & H_{n2} & \cdots & H_{nn}
+\end{bmatrix}
+\]
+\newline
+We solve the generalized eigenvalue problem:
+\[
+H \vec{c} = E S \vec{c}
+\]
+to obtain $n$ approximate energy eigenvalues and their corresponding eigenstates expressed in the STO basis.
+\section*{Comparison: Hydrogenic \(\zeta = \frac{Z}{n}\) vs. Even-Tempered Basis}
+
+We now compare the exact hydrogenic values of \( \zeta \) for a hydrogen atom (\( Z = 1 \)) with an even-tempered Slater-type basis. The hydrogenic \( 1s \) orbital has the exact form:
+
+\[
+\chi_{1s}(r) = e^{-Z r}, \quad \text{so } \zeta = Z = 1
+\]
+
+\subsection*{Hydrogenic Orbital Energy (Exact \(\zeta = Z\))}
+
+From earlier, we showed:
+\[
+\langle T \rangle = \frac{1}{2}, \quad \langle V \rangle = -1, \quad E = -\frac{1}{2}
+\]
+
+\subsection*{Even-Tempered STO Basis}
+
+In the even-tempered approach, we choose a geometric progression of exponents:
+
+\[
+\zeta_i = \alpha \beta^{i-1}, \quad i = 1, \dots, n
+\]
+
+Common choices are:
+\[
+\alpha = 0.3, \quad \beta = 2.0
+\]
+\[
+\Rightarrow \zeta = [0.3, 0.6, 1.2, 2.4, \dots]
+\]
+
+This allows flexible radial coverage and is useful for compact basis set generation. The resulting basis functions are:
+
+\[
+\chi_i(r) = e^{-\zeta_i r}
+\]
+
+\subsection*{Numerical Comparison via Generalized Eigenvalue Problem}
+
+We construct the Hamiltonian and overlap matrices using the previously defined expressions:
+
+\[
+S_{ij} = \frac{2}{(\zeta_i + \zeta_j)^3}, \quad
+T_{ij} = \frac{\zeta_i \zeta_j}{(\zeta_i + \zeta_j)^3}, \quad
+V_{ij} = - \frac{2}{(\zeta_i + \zeta_j)^2}
+\]
+\[
+H_{ij} = T_{ij} + V_{ij}
+\]
+
+Then we solve the generalized eigenvalue problem:
+
+\[
+H \vec{c} = E S \vec{c}
+\]
+
+
+
+\subsection*{Interpretation}
+
+\begin{itemize}
+  \item When using only one STO with \( \zeta = 1 \), we recover the exact result.
+  \item Even-tempered sets allow flexibility, but convergence is slower — more functions are needed for comparable accuracy.
+  \item For practical quantum chemistry, even-tempered STOs provide a compact and numerically efficient alternative, especially in correlated or molecular calculations where exact hydrogenic forms aren't available.
+\end{itemize}
+
+\subsection*{Energy Convergence with Increasing Basis Size}
+
+Letting \( n = 1, 2, \dots, 10 \), and using even-tempered \( \zeta_i \), one can plot the lowest eigenvalue vs. \( n \) and observe convergence toward \( -0.5 \) Hartree.
+\section*{Hartree--Fock for a Two-Electron System in a Non-Orthonormal Basis}
+
+We consider a Slater determinant in the singlet case:
+\[
+\Psi^{\text{HF}}(x_1,x_2) = \varphi(\mathbf r_1)\,\varphi(\mathbf r_2)\,\Xi(\sigma_1,\sigma_2),
+\]
+where the spatial orbital is expanded in a non-orthonormal basis $\{|\chi_\mu\rangle\}$,
+\[
+|\varphi\rangle = \sum_\mu C_\mu |\chi_\mu\rangle.
+\]
+
+Because the basis is non-orthonormal, we impose the constraint
+\[
+\langle \varphi|\varphi\rangle = \sum_{\mu\nu} C_\mu^* C_\nu S_{\mu\nu} = 1,
+\qquad S_{\mu\nu}=\langle \chi_\mu|\chi_\nu\rangle.
+\]
+
+
+
+\subsection*{Hartree--Fock Lagrangian}
+
+The Hartree--Fock energy functional is
+\[
+E^{\text{HF}}[C] = 2\langle \varphi|\hat h|\varphi\rangle
++ \langle \varphi\varphi|\hat v_{ee}|\varphi\varphi\rangle
+- \langle \varphi\varphi|\hat v_{ee}|\varphi\varphi\rangle_{\text{ex}},
+\]
+and the corresponding Lagrangian is
+\[
+\mathcal{L}[C,C^*] = E^{\text{HF}}[C] - \lambda\big(\langle \varphi|\varphi\rangle -1\big).
+\]
+
+In the basis expansion this becomes
+\[
+\mathcal{L}[C,C^*] = 
+2\sum_{\mu\nu} C_\mu^* C_\nu h_{\mu\nu}
++ \sum_{\mu\nu\lambda\sigma} C_\mu^* C_\nu^* C_\lambda C_\sigma
+\Big[ (\mu\nu|\lambda\sigma) - (\mu\nu|\sigma\lambda) \Big]
+- \lambda\Big(\sum_{\mu\nu} C_\mu^* C_\nu S_{\mu\nu}-1\Big).
+\]
+
+
+
+\subsection*{Stationary Condition}
+
+Taking the derivative with respect to $C_\mu^*$ gives
+\[
+\sum_\nu \Bigg(
+h_{\mu\nu}
++ \sum_{\lambda\sigma} D_{\lambda\sigma}
+\Big[ (\mu\nu|\lambda\sigma) - \tfrac12 (\mu\lambda|\nu\sigma) \Big]
+\Bigg) C_\nu
+= \lambda \sum_\nu S_{\mu\nu} C_\nu,
+\]
+with the density matrix
+\[
+D_{\lambda\sigma} = \sum_p n_p\, C_{\lambda p} C_{\sigma p}^*,
+\]
+where $n_p$ are orbital occupation numbers (not restricted to integers).
+
+
+\subsection*{Roothaan--Hall Equations}
+
+Defining the Fock matrix
+\[
+F_{\mu\nu} = h_{\mu\nu} + \sum_{\lambda\sigma} D_{\lambda\sigma}
+\Big[ (\mu\nu|\lambda\sigma) - \tfrac12(\mu\lambda|\nu\sigma) \Big],
+\]
+the Hartree--Fock equations take the form of a generalized eigenvalue problem,
+\[
+\mathbf F \mathbf C = \mathbf S \mathbf C \boldsymbol\varepsilon,
+\]
+to be solved self-consistently.
+
+\section*{SCF Loop Implementation Steps}
+\begin{enumerate}
+    \item Define parameters $\zeta_i, m_i, l_i, Z$, and the number of electrons.
+    \item Build the single-particle Hamiltonian $H_\text{core}$ and the overlap matrix $S$.
+    \item Initialize the density matrix $D$ from the eigenvectors of $H_\text{core}$ (the core Hamiltonian guess), and set the reference energy $E_\text{old} = 0$.
+    \item For each SCF iteration:
+    \begin{enumerate}
+        \item Construct the Coulomb and exchange matrices $J$ and $K$ from $D$ and the electron repulsion integrals (ERI).
+        \item Form the Fock matrix:
+        \[
+            F = H_\text{core} + J - \tfrac{1}{2}K,
+        \]
+        and symmetrize it to ensure Hermiticity.
+        \item Solve the generalized eigenvalue problem:
+        \[
+            F C = S C \varepsilon,
+        \]
+        to obtain molecular orbital (MO) coefficients $C$ and orbital energies $\varepsilon$.
+        \item Select the occupied orbitals $C_\text{occ}$ according to the number of electrons and build a new density matrix:
+        \[
+            D_\text{new} = 2 \, C_\text{occ} C_\text{occ}^T.
+        \]
+        \item Compute the electronic energy:
+        \[
+            E_\text{one} = \mathrm{Tr}[D H_\text{core}], \quad
+            E_\text{two} = \tfrac{1}{2}\mathrm{Tr}[D(J - \tfrac{1}{2}K)],
+        \]
+        \[
+            E_\text{total} = E_\text{one} + E_\text{two}.
+        \]
+        \item Check convergence using:
+        \[
+            \Delta E = |E_\text{total} - E_\text{old}|, \quad
+            \Delta D = \|D_\text{new} - D\|.
+        \]
+        If both are below the threshold, stop the iteration.
+        \item Update $D \leftarrow D_\text{new}$ and $E_\text{old} \leftarrow E_\text{total}$.
+    \end{enumerate}
+    \item Report the one-electron and two-electron contributions, as well as the final molecular orbital coefficient matrix.
+\end{enumerate}
+\section*{Newton--Raphson Optimization of Even--Tempered Exponents}
+
+\subsection*{1. Even--tempered exponents}
+We define a set of $n$ Slater type orbital exponents as
+\[
+\zeta_i(\alpha_0, \beta) \;=\; \alpha_0 \, \beta^{\,i-1}, 
+\quad i = 1,2,\dots,n,
+\]
+with constraints
+\[
+\alpha_0 > 0, \qquad \beta > 1.
+\]
+
+\subsection*{2. Objective function}
+Let $E(\{\zeta_i\})$ denote the Hartree--Fock total energy obtained from an SCF procedure using the basis defined by $\{\zeta_i\}$.  
+We define the objective function
+\[
+f(\alpha_0,\beta) \;=\; E\!\big( \{ \zeta_i(\alpha_0,\beta) \}_{i=1}^n \big).
+\]
+
+The optimization problem is then
+\[
+\min_{\alpha_0 > 0, \, \beta > 1} f(\alpha_0, \beta).
+\]
+
+\subsection*{3. Finite difference derivatives}
+Let step sizes in each direction be $h_\alpha$ and $h_\beta$.  
+
+\paragraph{First derivatives (gradient):}
+\begin{align}
+\frac{\partial f}{\partial \alpha_0} &\approx 
+\frac{f(\alpha_0 + h_\alpha, \beta) - f(\alpha_0 - h_\alpha, \beta)}{2 h_\alpha}, \\[6pt]
+\frac{\partial f}{\partial \beta} &\approx
+\frac{f(\alpha_0, \beta + h_\beta) - f(\alpha_0, \beta - h_\beta)}{2 h_\beta}.
+\end{align}
+
+\paragraph{Second derivatives (Hessian):}
+\begin{align}
+\frac{\partial^2 f}{\partial \alpha_0^2} &\approx 
+\frac{f(\alpha_0 + h_\alpha, \beta) - 2 f(\alpha_0, \beta) + f(\alpha_0 - h_\alpha, \beta)}{h_\alpha^2}, \\[6pt]
+\frac{\partial^2 f}{\partial \beta^2} &\approx 
+\frac{f(\alpha_0, \beta + h_\beta) - 2 f(\alpha_0, \beta) + f(\alpha_0, \beta - h_\beta)}{h_\beta^2}, \\[6pt]
+\frac{\partial^2 f}{\partial \alpha_0 \, \partial \beta} 
+&\approx 
+\frac{ f(\alpha_0 + h_\alpha, \beta + h_\beta) 
+- f(\alpha_0 + h_\alpha, \beta - h_\beta) 
+- f(\alpha_0 - h_\alpha, \beta + h_\beta) 
++ f(\alpha_0 - h_\alpha, \beta - h_\beta) }{4 h_\alpha h_\beta}.
+\end{align}
+
+By Schwarz’s theorem, the mixed derivative is symmetric:
+\[
+\frac{\partial^2 f}{\partial \alpha_0 \, \partial \beta} 
+= \frac{\partial^2 f}{\partial \beta \, \partial \alpha_0}.
+\]
+
+\subsection*{4. Newton--Raphson update}
+Let
+\[
+\bm{x} = 
+\begin{bmatrix}
+\alpha_0 \\ \beta
+\end{bmatrix}, 
+\quad
+\nabla f(\bm{x}) =
+\begin{bmatrix}
+\partial f / \partial \alpha_0 \\
+\partial f / \partial \beta
+\end{bmatrix},
+\quad
+H(\bm{x}) =
+\begin{bmatrix}
+\partial^2 f / \partial \alpha_0^2 & \partial^2 f / \partial \alpha_0 \partial \beta \\
+\partial^2 f / \partial \beta \partial \alpha_0 & \partial^2 f / \partial \beta^2
+\end{bmatrix}.
+\]
+
+The Newton--Raphson step is
+\[
+\Delta \bm{x} = - H(\bm{x})^{-1} \, \nabla f(\bm{x}).
+\]
+
+Update rule:
+\[
+\bm{x}_{k+1} = \bm{x}_k + \Delta \bm{x}.
+\]
+
+\subsection*{5. Constraints and stability}
+\begin{itemize}
+    \item If $\alpha_0 \leq 0$ or $\beta \leq 1$, reject the step or apply a backtracking line search.  
+    \item In practice, one may add a small ridge term $\lambda I$ to $H$ to stabilize the inversion:  
+    \[
+    H_\text{reg} = H + \lambda I.
+    \]
+    \item Stop when 
+    \[
+    \|\nabla f(\bm{x})\| < \varepsilon \quad \text{or} \quad
+    |\Delta \bm{x}| < \delta \quad \text{or} \quad
+    |f_{k+1} - f_k| < \eta.
+    \]
+\end{itemize}
+
+\end{document}
