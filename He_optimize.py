@@ -5,15 +5,15 @@ from atomic_scf import (
     even_temper, optimize_zeta_minimal
 )
 
-if __name__ == "__main__":
+if __name__ == "__He_optimize__":
     # === System ===
     Z = 2                  # Helium
     MAX_ITER = 100
     CONV = 1e-6
 
     # === Optimize s-only even-tempered exponents ===
-    n_s = 10                                # small, fast; try 4–5 later if you want
-    occ_opt = np.zeros(n_s); occ_opt[0] = 2.0   # one doubly occupied MO in s-only optimizer
+    n_s = 10                                
+    occ_opt = np.zeros(n_s); occ_opt[0] = 2.0  
 
     print("Optimizing He s-exponents (even-tempered)...")
     opt = optimize_zeta_minimal(n=n_s, Z=Z, occ=occ_opt)
