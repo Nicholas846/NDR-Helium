@@ -5,7 +5,7 @@ from atomic_scf import (
     even_temper, optimize_zeta_minimal
 )
 
-if __name__ == "__He_optimize__":
+if __name__ == "__main__":
     # === System ===
     Z = 2                  # Helium
     MAX_ITER = 100
