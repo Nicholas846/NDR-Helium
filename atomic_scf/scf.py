@@ -24,17 +24,24 @@ def scf_loop(basis_functions, Z, occ, S, H_core, ERI, max_iter=50, conv=1e-6):
     for it in range(1, max_iter + 1):
         J, K = build_JK(D, ERI)
         F = H_core + J - 0.5 * K
-        F = 0.5 * (F + F.T)  # symmetrize
+        F = 0.5 * (F + F.T) 
 
         eps, C = eigh(F, S)
         D_new = C[:, :len(occ)] @ np.diag(occ) @ C[:, :len(occ)].T
 
         E_one = np.sum(D_new * H_core)
         E_two = 0.5 * np.sum(D_new * (J - 0.5 * K))
+        print(J, K)
         E_tot = E_one + E_two
 
         dE = abs(E_tot - E_old)
         dD = np.linalg.norm(D_new - D)
+
+        # Debug: print orbital energies and occs
+        print(f"    Orbital energies (eps): {eps[:min(5,len(eps))]}")
+        #print(f"    Occupations: {occ}")
+        print(f"    E_one = {E_one:.12f}, E_two = {E_two:.12f}")
+
 
         print(f"Iter {it:2d}: E = {E_tot:.12f}  dE = {dE:.3e}  dD = {dD:.3e}")
         if dE < conv and dD < conv:
