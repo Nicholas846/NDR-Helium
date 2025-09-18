@@ -1,16 +1,8 @@
 import numpy as np
 from scipy.linalg import eigh
 
-def build_density_matrix(F, S, occ):
-    # Solve generalized eigenproblem FC = SCE
-    eps, C = eigh(F, S)
-    occ = np.asarray(occ, dtype=float)
-    C_occ = C[:, :len(occ)]
-    D = C_occ @ np.diag(occ) @ C_occ.T
-    return D, eps, C
-
 def build_JK(D, ERI):
-    # Coulomb and exchange using physicist notation ERI[i,j,k,l]
+
     J = np.einsum("kl,ijkl->ij", D, ERI)
     K = np.einsum("kl,ikjl->ij", D, ERI)
     return 0.5*(J+J.T), 0.5*(K+K.T)
