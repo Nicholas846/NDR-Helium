@@ -1,7 +1,7 @@
 # main.py — Helium (He) with s-only exponent optimization + SCF
 import numpy as np
 from atomic_scf import (
-    make_basis, S_matrix, H_matrix, ERI_tensor, scf_loop,
+    make_basis, scf_loop,
     even_temper, optimize_zeta_minimal
 )
 
@@ -30,14 +30,12 @@ if __name__ == "__main__":
     # Occupations: 2 electrons → 1 doubly occupied spatial MO
     occ = np.zeros(nbf)
     occ[0] = 2.0
+    occ_s = occ
+    occ_p = np.zeros(0)  # no p functions
 
-    # === Matrices & SCF ===
-    S = S_matrix(bfs)
-    H = H_matrix(bfs, Z)
-    ERI = ERI_tensor(bfs)
 
     E_tot, E_one, E_two = scf_loop(
-        bfs, Z, occ, S, H, ERI, max_iter=MAX_ITER, conv=CONV
+        bfs, Z, occ_s, occ_p, max_iter=MAX_ITER, conv=CONV
     )
 
     print("\n== He results ==")

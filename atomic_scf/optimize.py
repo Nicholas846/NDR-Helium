@@ -21,7 +21,7 @@ def optimize_zeta_minimal(n, Z, occ,
         a = np.exp(u)
         b = 1.0 + np.exp(v)
         zetas = even_temper(n, a, b)
-        return float(_energy_given_zetas(zetas, Z, occ))
+        return float(_energy_given_zetas(zetas, [], Z, occ, np.zeros(0)))
 
     def fd(E, u, v, hu, hv):
         E0   = E(u, v)
