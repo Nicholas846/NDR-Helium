@@ -6,12 +6,11 @@ from .scf import scf_loop
 def even_temper(n, alpha0, beta):
     return alpha0 * beta ** np.arange(n, dtype=float)
 
-def _energy_given_zetas(zetas, Z, occ):
-    bfs = make_basis(zetas, [0])  # s-only for minimal example
-    S = S_matrix(bfs)
-    H = H_matrix(bfs, Z)
-    ERI = ERI_tensor(bfs)
-    E_tot, E_one, E_two = scf_loop(bfs, Z, occ, S, H, ERI, max_iter=200, conv=1e-9)
+def _energy_given_zetas(zeta_s, zeta_p, Z, occ_s, occ_p):
+    bfs = []
+    bfs.extend(make_basis(zeta_s, [0]) )
+    bfs.extend(make_basis(zeta_p, [1]) )
+    E_tot, E_one, E_two = scf_loop(bfs, Z, occ_s, occ_p, max_iter=200, conv=1e-9)
     return E_tot
 
 def optimize_zeta_minimal(n, Z, occ,
