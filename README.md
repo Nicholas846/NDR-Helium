@@ -10,7 +10,11 @@ A simple Python implementation of atomic self-consistent field (SCF) / Hartree-F
 ## Usage
 To run Run the helium Hartree–Fock SCF calculation with even-tempered optimization:
 
-python main.py
+python He_optimize.py
+
+To run the Hartree-Fock SCF calculation for Broron with enforced spherical symmetry:
+
+python Boron.py
 
 ## Roadmap
 
