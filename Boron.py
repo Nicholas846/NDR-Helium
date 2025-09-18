@@ -1,53 +1,37 @@
 import numpy as np
 from atomic_scf import (
-    make_basis, S_matrix, H_matrix, ERI_tensor, scf_loop,
-    even_temper, optimize_zeta_minimal
+    make_basis, scf_loop, even_temper
 )
 
 if __name__ == "__main__":
-    
     Z = 5
-    MAX_ITER = 1
+    MAX_ITER = 50
     CONV = 1e-6
 
-    n_s = 2
-    n_p = 3
-    occ_opt = np.zeros(n_s + n_p)
+
+    n_s = 10
+    n_p = 10
+
+    # even-tempered exponents
+    zeta_s = even_temper(n_s, 0.25, 5)
+    zeta_p = even_temper(n_p, 0.2, 2.0)
+
+    '''zeta_s = [250.0, 62.5, 15.625, 3.90625, 0.9765625]
+    zeta_p = [125.0, 31.25, 7.8125, 1.953125, 0.48828125]'''
+
+    print("Calculate ground state energy of Boron (Z=5)")
+
+    basis_functions = []
+    basis_functions.extend(make_basis(zeta_s, [0]))  # s-shells
+    basis_functions.extend(make_basis(zeta_p, [1]))  # p-shells (3 per zeta)
+
+    print("Basis functions:")
+    for bf in basis_functions:
+        print(" ", bf)
+
     
+    occ_s = [2, 2] + [0]*8
+    occ_p = [1/3, 1/3, 1/3] + [0]*7
 
-    zeta_s = even_temper(n_s, 0.25, 2.0)
-    zeta_p = even_temper(n_p, 0.2, 1.5)
-
-    print("Calculate ground state energy of Boron")
-
-    bfs = []
-    for z in zeta_s:
-        bfs.extend(make_basis([z], [0]))   
-    
-    for z in zeta_p:
-        bfs.extend(make_basis([z], [1]))   
-    
-    nbf = len(bfs)
-
-    occ = np.zeros(nbf)
-    occ[:2] = 2.0
-    occ[2:5] = 1/3
-
-
-    S = S_matrix(bfs)
-    H = H_matrix(bfs, Z)
-    ERI = ERI_tensor(bfs)
-
-
-    E_tot, E_one, E_two = scf_loop(bfs, Z, occ, S, H, ERI, max_iter=MAX_ITER, conv=CONV)
-
-    print("\n== Boron (Z=5) results ==")
-    print(f"E_total = {E_tot:.12f}  (one-e = {E_one:.12f}, two-e = {E_two:.12f})")
-    print(f"NBasis = {nbf}  (s+p; ns={n_s}, np={n_p})")
-    print(f"s exponents: {zeta_s}")
-    print(f"p exponents: {zeta_p}")
-
-
-
-
-
+    E_tot, E_one, E_two = scf_loop(basis_functions, Z, occ_s, occ_p, max_iter=MAX_ITER, conv=CONV)
+    print(f"Final SCF Energy: {E_tot:.12f}  E_one = {E_one:.12f}  E_two = {E_two:.12f}")
