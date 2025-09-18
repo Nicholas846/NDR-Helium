@@ -13,7 +13,7 @@ def build_JK(D, ERI):
     # Coulomb and exchange using physicist notation ERI[i,j,k,l]
     J = np.einsum("kl,ijkl->ij", D, ERI)
     K = np.einsum("kl,ikjl->ij", D, ERI)
-    return J, K
+    return 0.5*(J+J.T), 0.5*(K+K.T)
 
 def scf_loop(basis_functions, Z, occ, S, H_core, ERI, max_iter=50, conv=1e-6):
     # Start with core Hamiltonian
@@ -31,8 +31,14 @@ def scf_loop(basis_functions, Z, occ, S, H_core, ERI, max_iter=50, conv=1e-6):
 
         E_one = np.sum(D_new * H_core)
         E_two = 0.5 * np.sum(D_new * (J - 0.5 * K))
-        print(J, K)
-        E_tot = E_one + E_two
+
+        E_tot = E_one + E_two 
+        EJ = 0.5 * np.sum(D_new * J)        # if using spin-summed D; else EJ = np.sum(D * J)
+        EK = -0.25 * np.sum(D_new * K)      # if using spin-summed D; else EK = -0.5 * np.sum(D * K)
+        print(f"EJ={EJ:.6f}  EK={EK:.6f}  E2e={EJ+EK:.6f}  |EK|/EJ={abs(EK)/max(EJ,1e-16):.3f}")
+        print("max|J-J^T|=", np.max(np.abs(J-J.T)), "  min diag(J)=", np.min(np.diag(J)))
+        print(D_new)
+
 
         dE = abs(E_tot - E_old)
         dD = np.linalg.norm(D_new - D)

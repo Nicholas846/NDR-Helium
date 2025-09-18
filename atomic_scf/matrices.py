@@ -20,8 +20,7 @@ def H_matrix(basis_functions, Z):
             V[i, j] = potential_integral(bi, bj, Z)
     return T + V
 
-def symmetrize_eri_chemist(ERI):
-    # (ij|kl) = (ji|kl) = (ij|lk) = (ji|lk) = (kl|ij) = (lk|ij) = (kl|ji) = (lk|ji)
+'''def symmetrize_eri_chemist(ERI):
     perms = [
         (0,1,2,3),
         (1,0,2,3),
@@ -32,7 +31,7 @@ def symmetrize_eri_chemist(ERI):
         (2,3,1,0),
         (3,2,1,0),
     ]
-    return sum(ERI.transpose(p) for p in perms) / 8.0
+    return sum(ERI.transpose(p) for p in perms) / 8.0'''
 
 def ERI_tensor(basis_functions):
     n = len(basis_functions)
@@ -43,5 +42,7 @@ def ERI_tensor(basis_functions):
                 for l, bl in enumerate(basis_functions):
                     for L in range(abs(bi.l - bj.l), bi.l + bj.l + 1):
                         ERI[i, j, k, l] += two_electron_repulsion(bi, bj, bk, bl, L)
-    ERI = symmetrize_eri_chemist(ERI)
+    #ERI = symmetrize_eri_chemist(ERI)
     return ERI
+
+
