@@ -1,35 +1,46 @@
-\documentclass{article}
+\documentclass[10pt, a4paper]{article}
 
-% Packages
-\usepackage{amsmath}    % For advanced math typesetting
-\usepackage{amssymb}    % For math symbols
-\usepackage{physics}    % For quantum mechanics notation
-\usepackage{geometry}   % For page layout
-\usepackage{graphicx}   % For including figures
-\usepackage{hyperref}   % For hyperlinks
-\usepackage{siunitx}  
-\usepackage{amsfonts}
-\usepackage{geometry}
-\usepackage{bm} % For units
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{geometry}
-\usepackage{bm}
+% Math & symbols
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{bm}          % Bold math
+
+% Physics helpers
+\usepackage{physics}     % Dirac bra-ket, derivatives, etc.
+
+% Layout & graphics
+\usepackage{geometry}    % Page layout
+\usepackage{graphicx}    % Include figures
+
+% Units & numbers
+\usepackage{siunitx}     % Proper units and formatting
+
+% Hyperlinks (load near the end)
+\usepackage{hyperref}
+
 \geometry{margin=1in}
+\title{Analytic Slater-Type-Orbital Integrals and Hartree--Fock Derivations}
+\author{Your Name \\[2pt]\small Department of Physics, Your University}
+\date{\today}
+
 
 \begin{document}
+\maketitle
+\tableofcontents
+\newpage
 
-\section*{Hamiltonian}
+
+\section{Hamiltonian}
+
 
 We consider both the one-electron and two-electron Hamiltonians in atomic units.
 
-\subsection*{One-Electron System (Hydrogen-like Atom)}
+\subsection{One-Electron System (Hydrogen-like Atom)}
 \[
 \hat{H}^{(1)} = -\frac{1}{2} \nabla^2 - \frac{Z}{r}
 \]
 This consists of the kinetic energy of the electron and the Coulomb attraction to the nucleus.
 
-\subsection*{Two-Electron System (e.g., Helium Atom)}
+\subsection{Two-Electron System (e.g., Helium Atom)}
 \[
 \hat{H}^{(2)} = -\frac{1}{2} \nabla_1^2 - \frac{1}{2} \nabla_2^2 - \frac{Z}{r_1} - \frac{Z}{r_2} + \frac{1}{|\mathbf{r}_1 - \mathbf{r}_2|}
 \]
@@ -40,7 +51,7 @@ Where:
   \item \( \frac{1}{|\mathbf{r}_1 - \mathbf{r}_2|} \): electron-electron repulsion
 \end{itemize}
 
-\section*{Matrix Elements in STO Basis}
+\section{Matrix Elements in STO Basis}
 
 Let basis functions be:
 \[
@@ -48,7 +59,7 @@ Let basis functions be:
 \]
 We define matrix elements for kinetic, potential, and overlap as:
 
-\subsection*{Kinetic Energy}
+\subsection{Kinetic Energy}
 \[
 \langle \ell_1, m_1; \zeta_1 | \hat{T} | \ell_2, m_2; \zeta_2 \rangle
 = \delta_{\ell_1 \ell_2}\, \delta_{m_1 m_2}\; t(\ell_1, \zeta_1, \zeta_2).
@@ -87,7 +98,7 @@ t(\ell,\zeta_1,\zeta_2) =
 \right]\!.
 \]
 
-\subsection*{Potential Energy}
+\subsection{Potential Energy}
 \[
 \langle \ell_1, m_1; \zeta_1 | \hat{V} | \ell_2, m_2; \zeta_2 \rangle
 = \delta_{\ell_1 \ell_2}\, \delta_{m_1 m_2}\; v(\ell, \zeta_1, \zeta_2),
@@ -99,7 +110,7 @@ v(\ell, \zeta_1, \zeta_2)
 = -Z \,\frac{\Gamma(2\ell + 2)}{(\zeta_1 + \zeta_2)^{2\ell + 2}}.
 \]
 
-\subsection*{Overlap}
+\subsection{Overlap}
 \[
 \langle \ell_1, m_1; \zeta_1 | \ell_2, m_2; \zeta_2 \rangle
 = \delta_{\ell_1 \ell_2}\, \delta_{m_1 m_2}\; s(\ell, \zeta_1, \zeta_2),
@@ -110,12 +121,12 @@ s(\ell, \zeta_1, \zeta_2)
 = \frac{\Gamma(2\ell + 3)}{(\zeta_1 + \zeta_2)^{2\ell + 3}}.
 \]
 
-\subsection*{Repulsion Integral}
+\subsection{Repulsion Integral}
 \[
 \big\langle \ell_1, m_1; \zeta_1;\, \ell_2, m_2; \zeta_2 \,\big|\, \ell_3, m_3; \zeta_3;\, \ell_4, m_4; \zeta_4 \big\rangle
 \]
 
-\subsubsection*{Spherical (Angular) Part Using 3j Symbols}
+\subsubsection{Spherical (Angular) Part Using 3j Symbols}
 Expand
 \[
 \frac{1}{|\mathbf{r}_1 - \mathbf{r}_2|} 
@@ -134,7 +145,7 @@ A = \sum_{l=0}^{\infty} \sum_{m=-l}^{l}
 \begin{pmatrix}\ell_3 & l & \ell_4 \\ m_3 & m & m_4\end{pmatrix}.
 \]
 
-\subsubsection*{Radial Part of the Two-Electron Repulsion Integral}
+\subsubsection{Radial Part of the Two-Electron Repulsion Integral}
 Define \( a = \ell_1 + \ell_2 + 2 \), \( b = \ell_3 + \ell_4 + 2 \), \( p = \zeta_1 + \zeta_2 \), \( q = \zeta_3 + \zeta_4 \).
 \[
 I = \int_0^\infty\!\!\int_0^\infty 
@@ -163,8 +174,8 @@ where \(\Gamma\) is the upper incomplete gamma function.
 I =  \int_0^\infty \big(I_1 + I_2\big)\, e^{-q r_2}\, r_2^b \, dr_2.
 \]
 
-\section*{Verification with Simple Molecules}
-\subsection*{$1s$ orbital hydrogen}
+\section{Verification with Simple Molecules}
+\subsection{$1s$ orbital hydrogen}
 For hydrogen in \(1s\) set \(\zeta_1 = \zeta_2 = 1\), \(Z = 1\), \(\ell = 0\):
 \[
 t = \tfrac{1}{2}\Big(\tfrac{\Gamma(3)}{2^3}\Big) = \tfrac{1}{2}\cdot \tfrac{2!}{8} = \tfrac{1}{8},\quad
@@ -178,7 +189,7 @@ Divide by \(s\) to obtain expectation values:
 \]
 hence \(E = \frac{1}{2} - 1 = -\frac{1}{2} \approx -13\ \text{eV}\).
 
-\subsection*{Two-function generalized eigenvalue problem for H}
+\subsection{Generalized eigenvalue problem for H using two STOs}
 For two \(s\)-type STOs \(\chi_i(r)=e^{-\zeta_i r}\) (\(i=1,2\), \(Z=1\)):
 \[
 \mathbf{H}\,\vec{c} = E\,\mathbf{S}\,\vec{c},\qquad
@@ -188,7 +199,7 @@ For two \(s\)-type STOs \(\chi_i(r)=e^{-\zeta_i r}\) (\(i=1,2\), \(Z=1\)):
 \]
 The secular equation \(\det(\mathbf{H}-E\mathbf{S})=0\) yields two energies (ground and first excited).
 
-\section*{Generalized Eigenvalue Problem for $n$ Slater-Type Orbitals}
+\subsection{Generalized Eigenvalue Problem for $n$ STOs}
 For \(n\) \(s\)-type STOs (\(\ell=0\)), \(\chi_i(r)=e^{-\zeta_i r}\),
 \[
 S_{ij} = \int_0^\infty e^{-(\zeta_i+\zeta_j) r} r^2 dr = \frac{2}{(\zeta_i+\zeta_j)^3},
@@ -202,18 +213,18 @@ H_{ij} = T_{ij}+V_{ij}.
 \]
 Solve \(H\vec{c}=E S \vec{c}\) to obtain \(n\) approximate energies and eigenvectors.
 
-\section*{Comparison: Hydrogenic \(\zeta = Z/n\) vs. Even-Tempered Basis}
+\section{Comparison: Hydrogenic \(\zeta = Z/n\) vs. Even-Tempered Basis}
 For hydrogen (\(Z=1\)), the exact \(1s\) is \(\chi_{1s}(r)=e^{-Zr}\) so \(\zeta=1\).
-\subsection*{Hydrogenic Orbital Energy (Exact \(\zeta = Z\))}
+\subsection{Hydrogenic Orbital Energy (Exact \(\zeta = Z\))}
 \(\langle T \rangle = \tfrac{1}{2},\; \langle V \rangle = -1,\; E=-\tfrac{1}{2}\).
-\subsection*{Even-Tempered STO Basis}
+\subsection{Even-Tempered STO Basis}
 Choose \(\zeta_i=\alpha \beta^{i-1}\) (\(i=1,\dots,n\)). Typical \(\alpha=0.3\), \(\beta=2.0\) \(\Rightarrow\)
 \(\zeta = [0.3,0.6,1.2,2.4,\dots]\).
-\subsection*{Numerical Comparison via Generalized Eigenvalue Problem}
+\subsection{Numerical Comparison via Generalized Eigenvalue Problem}
 Using the above \(S_{ij}\), \(T_{ij}\), and \(V_{ij}\),
 solve \(H\vec{c}=ES\vec{c}\); the lowest eigenvalue approaches \(-0.5\) Hartree as \(n\) increases.
 
-\section*{Hartree--Fock for a Two-Electron System in a Non-Orthonormal Basis}
+\section{Hartree--Fock for a Two-Electron System in a Non-Orthonormal Basis}
 For a singlet Slater determinant
 \[
 \Psi^{\text{HF}}(x_1,x_2) = \varphi(\mathbf r_1)\,\varphi(\mathbf r_2)\,\Xi(\sigma_1,\sigma_2),\qquad
@@ -225,7 +236,7 @@ we enforce
 S_{\mu\nu}=\langle \chi_\mu|\chi_\nu\rangle.
 \]
 
-\subsection*{Hartree--Fock Lagrangian}
+\subsection{Hartree--Fock Lagrangian}
 \[
 E^{\text{HF}}[C] = 2\langle \varphi|\hat h|\varphi\rangle
 + \langle \varphi\varphi|\hat v_{ee}|\varphi\varphi\rangle
@@ -244,7 +255,7 @@ In a basis,
 where $h_{\mu\nu}$ are one-electron integrals (overlap, kinetic, nuclear attraction) and
 $(\mu\nu|\lambda\sigma)$ are two-electron repulsion integrals.\footnote{In practice, the one-electron integrals admit closed forms; the two-electron terms combine angular-momentum algebra with radial integrals that may use incomplete gamma functions and numerical quadrature.}
 
-\subsection*{Stationary Condition}
+\subsection{Stationary Condition}
 \[
 \sum_\nu \!\left(
 h_{\mu\nu}
@@ -259,7 +270,7 @@ D_{\lambda\sigma} = \sum_p n_p\, C_{\lambda p} C_{\sigma p}^*
 \]
 $n_p$ \text{ need not be integers (fractional occupations may be used to preserve symmetry).}\footnote{For example, in Boron the three degenerate $2p$ orbitals can be assigned occupations of $1/3$ each to maintain spherical averaging.}
 
-\subsection*{Roothaan--Hall Equations}
+\subsection{Roothaan--Hall Equations}
 \[
 F_{\mu\nu} = h_{\mu\nu} + \sum_{\lambda\sigma} D_{\lambda\sigma}
 \Big[ (\mu\nu|\lambda\sigma) - \tfrac12(\mu\lambda|\nu\sigma) \Big],
@@ -268,7 +279,7 @@ F_{\mu\nu} = h_{\mu\nu} + \sum_{\lambda\sigma} D_{\lambda\sigma}
 \]
 solved self-consistently.\footnote{At every iteration the Coulomb and exchange matrices, and hence the Fock matrix, are symmetrized to ensure Hermiticity.}
 
-\section*{SCF Loop Implementation Steps}
+\section{SCF Loop Implementation Steps}
 \begin{enumerate}
     \item \textbf{System setup.}  
     Choose exponents $\zeta_i$ and angular labels $(\ell_i,m_i)$, nuclear charge $Z$, and orbital occupations. For each $\ell$, include all $m$. Even-tempered exponent sequences may be used and optimized variationally.\footnote{Optimization can be carried out via finite-difference Newton--Raphson on the even-tempered parameters to lower the total energy.}
@@ -296,20 +307,20 @@ solved self-consistently.\footnote{At every iteration the Coulomb and exchange m
     On convergence, report \(E_\text{one}\), \(E_\text{two}\), and \(E_\text{total}\). If the maximum number of iterations is reached without meeting thresholds, return the last values with a warning.\footnote{Iteration logs display the energy and residual changes, and indicate whether convergence was achieved.}
 \end{enumerate}
 
-\section*{Newton--Raphson Optimization of Even--Tempered Exponents}
-\subsection*{1. Even--tempered exponents}
+\section{Newton--Raphson Optimization of Even--Tempered Exponents}
+\subsection{1. Even--tempered exponents}
 Define
 \[
 \zeta_i(\alpha_0, \beta) = \alpha_0 \beta^{\,i-1}, \quad i=1,\dots,n,
 \qquad \alpha_0>0,\;\beta>1.
 \]
-\subsection*{2. Objective function}
+\subsection{2. Objective function}
 Let \(E(\{\zeta_i\})\) be the SCF total energy; define
 \[
 f(\alpha_0,\beta)=E\!\big(\{\zeta_i(\alpha_0,\beta)\}_{i=1}^n\big),\qquad
 \min_{\alpha_0>0,\;\beta>1} f(\alpha_0,\beta).
 \]
-\subsection*{3. Finite difference derivatives}
+\subsection{3. Finite difference derivatives}
 With steps \(h_\alpha,h_\beta\),
 \begin{align}
 \frac{\partial f}{\partial \alpha_0} &\approx 
@@ -329,7 +340,7 @@ With steps \(h_\alpha,h_\beta\),
 \end{align}
 By Schwarz’s theorem, the mixed derivative is symmetric.
 
-\subsection*{4. Newton--Raphson update}
+\subsection{4. Newton--Raphson update}
 Let
 \[
 \bm{x}=\begin{bmatrix}\alpha_0\\ \beta\end{bmatrix},\quad
@@ -345,7 +356,7 @@ The update is
 \bm{x}_{k+1} = \bm{x}_k + \Delta \bm{x}.
 \]
 
-\subsection*{5. Constraints and stability}
+\subsection{5. Constraints and stability}
 \begin{itemize}
     \item If \(\alpha_0 \le 0\) or \(\beta \le 1\), reject the step or apply backtracking.
     \item Optionally regularize \(H\) with a small ridge term \(H_\text{reg}=H+\lambda I\) for numerical stability.

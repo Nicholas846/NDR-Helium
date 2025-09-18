@@ -16,7 +16,7 @@ def scf_loop(basis_functions, Z, occ_s, occ_p, max_iter=50, conv=1e-6):
     H_core = H_matrix(basis_functions, Z)
     ERI = ERI_tensor(basis_functions)
  
-    F = 0.5 * (H_core + H_core.T)  # start from core
+    F = 0.5 * (H_core + H_core.T)  
 
     Ds, _, _ = density_matrix_s_block(F, S, basis_functions, occ_s)
     if occ_p.size > 0:
