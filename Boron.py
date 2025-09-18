@@ -7,7 +7,7 @@ from atomic_scf import (
 if __name__ == "__main__":
     
     Z = 5
-    MAX_ITER = 100
+    MAX_ITER = 1
     CONV = 1e-6
 
     n_s = 2
