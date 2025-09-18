@@ -1,6 +1,6 @@
 # main.py — Helium (He) with s-only exponent optimization + SCF
 import numpy as np
-from atomic_scf import (
+from src import (
     make_basis, scf_loop,
     even_temper, optimize_zeta_minimal
 )
