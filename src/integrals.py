@@ -65,7 +65,7 @@ def repulsion_angular(bi, bj, bz, bl, L):
         wig_4 = wigner_3j(bz.l, L, bl.l, bz.m, m, bl.m)
 
         if (wig_1 == 0) or (wig_2 == 0) or (wig_3 == 0) or (wig_4 == 0):
-            return 0
+            continue
 
         angular += norm * wig_1 * wig_2 * wig_3 * wig_4
 

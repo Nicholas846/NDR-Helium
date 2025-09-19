@@ -31,7 +31,7 @@ if __name__ == "__main__":
     occ = np.zeros(nbf)
     occ[0] = 2.0
     occ_s = occ
-    occ_p = np.zeros(0)  # no p functions
+    occ_p = []  # no p functions
 
 
     E_tot, E_one, E_two = scf_loop(

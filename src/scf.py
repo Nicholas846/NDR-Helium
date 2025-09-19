@@ -19,7 +19,7 @@ def scf_loop(basis_functions, Z, occ_s, occ_p, max_iter=50, conv=1e-6):
     F = 0.5 * (H_core + H_core.T)  
 
     Ds, _, _ = density_matrix_s_block(F, S, basis_functions, occ_s)
-    if occ_p.size > 0:
+    if len(occ_p) > 0:
         Dp, _, _ = density_matrix_p_block(F, S, basis_functions, occ_p)
     else:
         Dp = np.zeros_like(Ds)
@@ -33,7 +33,7 @@ def scf_loop(basis_functions, Z, occ_s, occ_p, max_iter=50, conv=1e-6):
         F = 0.5 * (F + F.T)
 
         Ds_new, _, _ = density_matrix_s_block(F, S, basis_functions, occ_s)
-        if occ_p.size > 0:
+        if len(occ_p) > 0:
             Dp_new, _, _ = density_matrix_p_block(F, S, basis_functions, occ_p)
         else:
             Dp_new = np.zeros_like(Ds_new)
