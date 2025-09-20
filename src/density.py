@@ -40,7 +40,6 @@ def density_matrix_s_block(F, S, basis_functions, occ_s):
     D_s = C_occ_s @ np.diag(occ_s) @ C_occ_s.T
     D_s_full = embed_block(D_s, idx_s, basis_functions)
     D_s_full = 0.5 * (D_s_full + D_s_full.T)  
-
     return D_s_full, eps_s, C_s
 
 def density_matrix_p_block(F, S, basis_functions, occ_p):
@@ -50,16 +49,14 @@ def density_matrix_p_block(F, S, basis_functions, occ_p):
 
     for m in (-1, 0, 1):
         idx_p = sort_by_lm(basis_functions, 1, m)
-        if not idx_p:
-            continue
-        
+   
         eps_m, C_m = sub_eigh(F, S, idx_p)
         eps_p[m], C_p[m] = eps_m, C_m
 
         occ_m = np.array(occ_p[m] if isinstance(occ_p, dict) else occ_p)
         C_occ_m = C_m[:, :len(occ_m)]
         D_m = C_occ_m @ np.diag(occ_m) @ C_occ_m.T
-        D_m_full += embed_block(D_m, idx_p, basis_functions)
+        D_p_full += embed_block(D_m, idx_p, basis_functions)
         
     D_p_full = 0.5 * (D_p_full + D_p_full.T)
 

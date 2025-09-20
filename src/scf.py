@@ -8,7 +8,7 @@ def build_JK(D, ERI):
 
     J = np.einsum("kl,ijkl->ij", D, ERI)
     K = np.einsum("kl,ikjl->ij", D, ERI)
-    return 0.5*(J+J.T), 0.5*(K+K.T)
+    return J, K
 
 def scf_loop(basis_functions, Z, occ_s, occ_p, max_iter=50, conv=1e-6):
 
@@ -38,6 +38,9 @@ def scf_loop(basis_functions, Z, occ_s, occ_p, max_iter=50, conv=1e-6):
         else:
             Dp_new = np.zeros_like(Ds_new)
         D_new = density_matrix(Ds_new, Dp_new)
+        print(f"max D: {np.max(D_new@S)}, min D : {np.min(D_new@S)}")
+        n_elec = np.trace(D_new @ S)
+        print(f"Trace(DS) = {n_elec:.6f}")
 
         E_one = np.sum(D_new * H_core)
         E_two = 0.5 * np.sum(D_new * (J - 0.5 * K))

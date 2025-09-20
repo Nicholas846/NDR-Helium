@@ -42,16 +42,13 @@ def repulsion_radial(bi, bj, bz, bl, L):
     def integrant_2(r):
         return (r**L / p**(a - L)) * gamma(a - L) * gammaincc(a - L, p*r) * np.exp(-q * r) * r**b
 
-    l_min = abs(bi.l - bj.l)
-    l_max = bi.l + bj.l
-
     radial = 0
 
-    val_1, err_1 = quad(integrant_1, 0.0, np.inf, epsabs=1e-10, epsrel=1e-10, limit=200)
-    val_2, err_2 = quad(integrant_2, 0.0, np.inf, epsabs=1e-10, epsrel=1e-10, limit=200)
+    val_1, err_1 = quad(integrant_1, 0.0, np.inf, epsabs=1e-10, epsrel=1e-10, limit=2000)
+    val_2, err_2 = quad(integrant_2, 0.0, np.inf, epsabs=1e-10, epsrel=1e-10, limit=2000)
     val = val_1 + val_2
     radial += val
-
+    
     return radial
 
 def repulsion_angular(bi, bj, bz, bl, L):
@@ -63,11 +60,11 @@ def repulsion_angular(bi, bj, bz, bl, L):
         wig_2 = wigner_3j(bi.l, L, bj.l, bi.m, -m, bj.m)
         wig_3 = wigner_3j(bz.l, L, bl.l, 0, 0, 0)
         wig_4 = wigner_3j(bz.l, L, bl.l, bz.m, m, bl.m)
-
-        if (wig_1 == 0) or (wig_2 == 0) or (wig_3 == 0) or (wig_4 == 0):
+        con = (-1)**m
+        if abs(wig_1) < 1e-15 or abs(wig_2) < 1e-15 or abs(wig_3) < 1e-15 or abs(wig_4) < 1e-15:
             continue
 
-        angular += norm * wig_1 * wig_2 * wig_3 * wig_4
+        angular += con * norm * wig_1 * wig_2 * wig_3 * wig_4
 
     return angular
 
@@ -75,3 +72,4 @@ def two_electron_repulsion(bi, bj, bk, bl, L):
     r = repulsion_radial(bi, bj, bk, bl, L)
     a = repulsion_angular(bi, bj, bk, bl, L)
     return r * a
+
