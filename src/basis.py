@@ -7,11 +7,12 @@ class BasisFunction:
     def __repr__(self):
         return f"BasisFunction(zeta={self.zeta}, l={self.l}, m={self.m})"
 
-def make_basis(zeta_list, l_list):
+
+def make_basis(*zeta_lists):
     bf = []
-    for zeta in zeta_list:
-        for l in l_list:
+
+    for l, zetas in enumerate(zeta_lists):
+        for zeta in zetas:
             for m in range(-l, l + 1):
                 bf.append(BasisFunction(zeta, l, m))
     return bf
-
