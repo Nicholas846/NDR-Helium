@@ -19,7 +19,7 @@
 
 \geometry{margin=1in}
 \title{Analytic Slater-Type-Orbital Integrals and Hartree--Fock Derivations}
-\author{Your Name \\[2pt]\small Department of Physics, Your University}
+\author{Nicholas Wu \\[2pt]\small Department of Chemistry, University of California, Irvine}
 \date{\today}
 
 
@@ -167,13 +167,14 @@ where \(\gamma\) is the lower incomplete gamma function.
 I_2 = \int_{r_2}^{\infty} r_1^{a-l-1} e^{-p r_1}\, dr_1 \; r_2^l
 = \frac{r_2^l}{p^{a-l}}\,\Gamma(a-l, p r_2),
 \]
-where \(\Gamma\) is the upper incomplete gamma function.
+where \(\Gamma\) is the upper incomplete gamma function.\\
 
-\paragraph{Final Expression}
+The radial part of the two-electron integral is
 \[
-I =  \int_0^\infty \big(I_1 + I_2\big)\, e^{-q r_2}\, r_2^b \, dr_2.
+R^{L}(ij|kl)
+=\frac{(a-L-1)!}{p^{a-L}}\sum_{k=0}^{a-L-1}\frac{p^k}{k!}\frac{\Gamma(b+L+k+1)}{(p+q)^{b+L+k+1}} + \frac{(a+L)!}{p^{a+L+1}}\left(\frac{\Gamma(b-L)}{q^{b-L}} - \sum_{k=0}^{a+L}\frac{p^k}{k!}\frac{\Gamma(b-L+k)}{(p+q)^{b-L+k}}\right)
 \]
-
+where $\gamma$ and $\Gamma$ denote the lower and upper incomplete gamma functions, respectively.
 \section{Verification with Simple Molecules}
 \subsection{$1s$ orbital hydrogen}
 For hydrogen in \(1s\) set \(\zeta_1 = \zeta_2 = 1\), \(Z = 1\), \(\ell = 0\):

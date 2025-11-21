@@ -1,91 +1,83 @@
 import numpy as np
-from scipy.special import gamma, gammainc, gammaincc
-from scipy.integrate import quad
-from sympy.physics.wigner import wigner_3j, clebsch_gordan, gaunt
-import math
-from .basis import BasisFunction, make_basis
+from math import factorial
+from scipy.special import gamma, wigner_3j
 
 
 
+def Radial_repulsion_integral(bi, bj, bk, bl, L):
+    a = bi.l + bj.l + 2
+    b = bk.l + bl.l + 2
+    p = bi.zeta + bj.zeta
+    q = bk.zeta + bl.zeta
 
-def pair_key(li, zeta_i, lj, zeta_j):
+    n1 = a + L
 
-   return tuple(sorted([(li, zeta_i), (lj, zeta_j)]))
+    prefactor_1 = factorial(n1) / (p ** (n1 + 1))
 
-def radial_key(bi, bj, bz, bl, L):
-   
-    pair_ij = pair_key(bi.l, bi.zeta, bj.l, bj.zeta)
-    pair_zl = pair_key(bz.l, bz.zeta, bl.l, bl.zeta)
-    
-    pair_lo, pair_hi = sorted([pair_ij, pair_zl])
+    term0_1 = gamma(b - L) / (q ** (b - L))
 
-    return (pair_lo, pair_hi, L)
+    k_vals_1 = np.arange(0, n1 + 1, dtype=int)
 
-radial_cache = {}
+    sum_terms_1 = 0.0
+    for k in k_vals_1:
+        coeff = (p ** k) / factorial(k)
+        gam = gamma(b - L + k)
+        denom = (p + q) ** (b - L + k)
+        sum_terms_1 += coeff * gam / denom
+
+    I_1 = prefactor_1 * (term0_1 - sum_terms_1)
+
+    n2 = a - L - 1
+
+    prefactor_2 = factorial(n2) / (p ** (a - L))
+
+    k_vals_2 = np.arange(0, n2 + 1, dtype=int)
+
+    sum_terms_2 = 0.0
+    for k in k_vals_2:
+        coeff = (p ** k) / factorial(k)
+        gam = gamma(b + L + k + 1)
+        denom = (p + q) ** (b + L + k + 1)
+        sum_terms_2 += coeff * gam / denom
+
+    I_2 = prefactor_2 * sum_terms_2
+
+    return I_1 + I_2
 
 
-def repulsion_radial(bi, bj, bz, bl, L):
+def angular_part(bi, bj, bk, bl, L):
+    li, lj, lk, ll = bi.l, bj.l, bk.l, bl.l
+    mi, mj, mk, ml = bi.m, bj.m, bk.m, bl.m
 
-    key = radial_key(bi, bj, bz, bl, L)
+    a = wigner_3j(li, L, lj, 0, 0, 0)
+    b = wigner_3j(lk, L, ll, 0, 0, 0)
 
-    if key in radial_cache:
-        return radial_cache[key]
-    
-    a, b = bi.l + bj.l + 2, bz.l + bl.l + 2
-    p, q = bi.zeta + bj.zeta, bz.zeta + bl.zeta
-    def integrant_1(r):
-      A = 1/(r**(L+1))
-      B = 1/(p**(a + L + 1))
-      C = gamma(a + L + 1) * gammainc(a + L + 1, p*r)
-      D = np.exp(-q*r) * r**b
-      return A * B * C * D
+    sum_M = 0.0
+    for M in range(-L, L + 1):
+        c = wigner_3j(li, L, lj, -mi, -M, mj)
+        d = wigner_3j(lk, L, ll, -mk, M, ml)
+        sum_M += (-1) ** M * c * d
 
-    def integrant_2(r):
-      E = r**L
-      F = 1/(p**(a - L))
-      G = gamma(a - L) * gammaincc(a - L, p*r)
-      H = np.exp(-q*r) * r**b
-      return E * F * G * H
-    
-    I_1, _ = quad(integrant_1, 0, np.inf, limit=200)
-    I_2, _ = quad(integrant_2, 0, np.inf, limit=200)
-    val  = (I_1 + I_2)
+    return float(a * b * sum_M)
 
-    radial_cache[key] = val
 
-    return val
+def electron_repulsion_integral(bi, bj, bk, bl):
+    li, lj, lk, ll = bi.l, bj.l, bk.l, bl.l
 
-def ERI(bi, bj, bz, bl):
-    li, lj, lk, ll = bi.l, bj.l, bz.l, bl.l
-    mi, mj, mk, ml = bi.m, bj.m, bz.m, bl.m
-
-    Lmin = max(abs(li - lj), abs(lk - ll))
-    Lmax = min(li + lj, lk + ll)
+    Lmin_ij, Lmax_ij = abs(li - lj), li + lj
+    Lmin_kl, Lmax_kl = abs(lk - ll), lk + ll
+    Lmin, Lmax = max(Lmin_ij, Lmin_kl), min(Lmax_ij, Lmax_kl)
+    if Lmin > Lmax:
+        return 0.0
 
     total = 0.0
+    pref = (-1) ** (bi.m + bk.m) * np.sqrt(
+        (2 * li + 1) * (2 * lj + 1) * (2 * lk + 1) * (2 * ll + 1)
+    )
 
     for L in range(Lmin, Lmax + 1):
-        g1 = wigner_3j(li, lj, L, 0, 0, 0)
-        g2 = wigner_3j(lk, ll, L, 0, 0, 0)
+        A_L = angular_part(bi, bj, bk, bl, L)
+        R_L = Radial_repulsion_integral(bi, bj, bk, bl, L)
+        total += A_L * R_L
 
-        if g1 == 0.0 or g2 == 0.0:
-            continue
-        
-        R_L = repulsion_radial(bi, bj, bz, bl, L)
-
-        A_L = 0.0
-
-
-        M = mi - mj
-        if (mi + ml) == (mj + mk):
-            g3 = wigner_3j(li, lj, L, mi, -mj, -M)
-            g4 = wigner_3j(lk, ll, L, mk, -ml, M)
-            A_L = g3 * g4 * (-1)**M
-        
-        if A_L != 0.0:
-            total += R_L * A_L * g1 * g2
-    
-    pre = (-1)**(mi + mj) * np.sqrt((2*li + 1)*(2*lj + 1)*(2*lk + 1)*(2*ll + 1))
-    total = pre * total
-
-    return float(total)
+    return float(pref * total)
