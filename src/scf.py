@@ -7,7 +7,7 @@ from .basis_group import group_basis_by_lm
 from .Density_occ import build_density, fractional_occupations
 
 
-def scf(basis, Z, N_elec, max_iter=150, conv=1e-8, damping=0.3):
+def scf(basis, Z, N_elec, max_iter=150, conv=1e-7, damping=0.3):
     n = len(basis)
     # One-electron stuff
     S = S_matrix(basis)
@@ -84,7 +84,9 @@ def scf(basis, Z, N_elec, max_iter=150, conv=1e-8, damping=0.3):
 
         occ = fractional_occupations(eps_full, N_elec)
         D_new = build_density(C_full, occ)
-        # D_new = (1 - damping) * D + damping * D_new
+        D_new = (1 - damping) * D + damping * D_new
+
+
         J, K = build_JK(eri, D_new)
         E_one = np.trace(D_new @ H_core)
         E_two = 0.5 * np.trace(D_new @ (J + K))
@@ -105,7 +107,7 @@ def scf(basis, Z, N_elec, max_iter=150, conv=1e-8, damping=0.3):
 
     print("number of electron ", np.trace(D @ S))
 
-    # --- Virial Ratio Calculation ---
+
     T_tot = np.trace(D @ T_mat)
 
     V_ext = np.trace(D @ V_ext_mat)
@@ -119,6 +121,8 @@ def scf(basis, Z, N_elec, max_iter=150, conv=1e-8, damping=0.3):
     print(f"Final Virial Ratio (V/T): {virial_ratio:.8f}")
     print("one electron energy", E_one)
     print("two electron energy", E_two)
+
+    
     return {
         "E_total": E_tot,
         "E_one": E_one,
@@ -129,4 +133,7 @@ def scf(basis, Z, N_elec, max_iter=150, conv=1e-8, damping=0.3):
         "H_core": H_core,
         "Fock": F,
         "iterations": it,
+        "coefficients": C_full,
+        "eri": eri,
+        "basis": basis,
     }

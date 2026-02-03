@@ -1,6 +1,7 @@
 import numpy as np
 from math import factorial
-from scipy.special import gamma, wigner_3j
+from scipy.special import gamma
+from sympy.physics.wigner import wigner_3j
 
 
 
@@ -45,20 +46,30 @@ def Radial_repulsion_integral(bi, bj, bk, bl, L):
     return I_1 + I_2
 
 
+def gaunt_matrix_element(li, mi, L, M, lj, mj):
+
+    if (-mi + M + mj) != 0:
+        return 0.0
+
+    phase = (-1)**mi
+
+    pref = np.sqrt((2*li + 1)*(2*L + 1)*(2*lj + 1) / (4*np.pi))
+
+    return float(
+        phase
+        * pref
+        * wigner_3j(li, L, lj, 0, 0, 0)
+        * wigner_3j(li, L, lj, -mi, M, mj)
+    )
+
 def angular_part(bi, bj, bk, bl, L):
-    li, lj, lk, ll = bi.l, bj.l, bk.l, bl.l
-    mi, mj, mk, ml = bi.m, bj.m, bk.m, bl.m
 
-    a = wigner_3j(li, L, lj, 0, 0, 0)
-    b = wigner_3j(lk, L, ll, 0, 0, 0)
-
-    sum_M = 0.0
-    for M in range(-L, L + 1):
-        c = wigner_3j(li, L, lj, -mi, -M, mj)
-        d = wigner_3j(lk, L, ll, -mk, M, ml)
-        sum_M += (-1) ** M * c * d
-
-    return float(a * b * sum_M)
+    s = 0.0
+    for M in range(-L, L+1):
+        a = gaunt_matrix_element(bi.l, bi.m, L, M, bj.l, bj.m)
+        b = gaunt_matrix_element(bk.l, bk.m, L, M, bl.l, bl.m)
+        s += a * np.conjugate(b)
+    return (4*np.pi/(2*L + 1)) * float(s)
 
 
 def electron_repulsion_integral(bi, bj, bk, bl):
@@ -71,13 +82,9 @@ def electron_repulsion_integral(bi, bj, bk, bl):
         return 0.0
 
     total = 0.0
-    pref = (-1) ** (bi.m + bk.m) * np.sqrt(
-        (2 * li + 1) * (2 * lj + 1) * (2 * lk + 1) * (2 * ll + 1)
-    )
-
     for L in range(Lmin, Lmax + 1):
-        A_L = angular_part(bi, bj, bk, bl, L)
         R_L = Radial_repulsion_integral(bi, bj, bk, bl, L)
+        A_L = angular_part(bi, bj, bk, bl, L)
         total += A_L * R_L
 
-    return float(pref * total)
+    return float(total)

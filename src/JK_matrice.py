@@ -18,6 +18,3 @@ def build_JK(eri, D, thresh=1e-14):
     return J, K
 
 
-def build_density(C, occ):
-    D = C @ np.diag(occ) @ C.T
-    return D
