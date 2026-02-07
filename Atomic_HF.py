@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 import scipy.linalg as LA
 from scipy.integrate import quad
 
+from src import basis
+
 class BasisFunction:
     def __init__(self, zeta, l, m):
         self.zeta = float(zeta)
@@ -153,22 +155,6 @@ def Radial_repulsion_integral(bi, bj, bk, bl, L):
 
 
 
-'''def angular_part(bi, bj, bk, bl, L):
-    li, lj, lk, ll = bi.l, bj.l, bk.l, bl.l
-    mi, mj, mk, ml = bi.m, bj.m, bk.m, bl.m
-
-    a = wigner_3j(li, L, lj, 0, 0, 0)
-    b = wigner_3j(lk, L, ll, 0, 0, 0)
-
-    sum_M = 0.0
-    for M in range(-L, L + 1):
-        e = (-1) ** M
-        c = wigner_3j(li, L, lj, -mi, -M, mj)
-        d = wigner_3j(lk, L, ll, -mk, M, ml)
-        sum_M += e * c * d
-
-    return float(a * b * sum_M)'''
-
 def Y_matrix_element(li, mi, L, M, lj, mj):
     """
     < li mi | Y_{L M} | lj mj >  for *complex* spherical harmonics with Condon–Shortley phase.
@@ -190,7 +176,7 @@ def Y_matrix_element(li, mi, L, M, lj, mj):
         * wigner_3j(li, L, lj, -mi, M, mj)
     )
 
-def angular_factor_pair_symmetric(bi, bj, bk, bl, L):
+def angular_part(bi, bj, bk, bl, L):
     """
     Angular part in the pair-symmetric form:
     (4π/(2L+1)) * Σ_M <i|Y_LM|j> * <k|Y_LM|l>^*
@@ -214,31 +200,11 @@ def electron_repulsion_test(bi, bj, bk, bl):
     total = 0.0
     for L in range(Lmin, Lmax + 1):
         R_L = Radial_repulsion_integral(bi, bj, bk, bl, L)
-        A_L = angular_factor_pair_symmetric(bi, bj, bk, bl, L)
+        A_L = angular_part(bi, bj, bk, bl, L)
         total += A_L * R_L
 
     return float(total)
 
-'''def electron_repulsion_test(bi, bj, bk, bl):
-    li, lj, lk, ll = bi.l, bj.l, bk.l, bl.l
-
-    Lmin_ij, Lmax_ij = abs(li - lj), li + lj
-    Lmin_kl, Lmax_kl = abs(lk - ll), lk + ll
-    Lmin, Lmax = max(Lmin_ij, Lmin_kl), min(Lmax_ij, Lmax_kl)
-    if Lmin > Lmax:
-        return 0.0
-
-    total = 0.0
-    pref = (-1) ** (bi.m + bk.m) * np.sqrt(
-        (2 * li + 1) * (2 * lj + 1) * (2 * lk + 1) * (2 * ll + 1)
-    )
-
-    for L in range(Lmin, Lmax + 1):
-        A_L = angular_part(bi, bj, bk, bl, L)
-        R_L = Radial_repulsion_integral(bi, bj, bk, bl, L)
-        total += A_L * R_L
-
-    return float(pref * total)'''
 
 
 def build_eri_tensor(basis_set):
@@ -461,26 +427,59 @@ def scf(basis, Z, N_elec, max_iter=150, conv=1e-7, damping=0.3):
         "eri": eri,
         "basis": basis,
     }
-
-Z = 10
+Z = 86
 zeta_s = [
-    93.7103745724026,
-    36.31530927584123,
-    17.326076791934174,
-    9.20502018607238,
-    5.220119627077525,
-    3.0652717789292354,
-    1.3075479390829232,
+    500.0, 278.641, 155.281, 86.5354, 48.2246, 26.8747, 14.9768,
+    8.34627, 4.65122, 2.59204, 1.4445, 0.804991, 0.448606, 0.25
+]
 
-    0.708271178970315
-]
 zeta_p = [
-    5.327891916884201,
-    2.504061352403331,
-    1.3020698500080554,
-    0.6571656186989699
+    200.0, 106.734, 56.9607, 30.3982, 16.2226, 8.65752,
+    4.62026, 2.46569, 1.31587, 0.702238, 0.374763, 0.2
 ]
-basis = make_basis(zeta_s, zeta_p)
+
+zeta_d = [
+    80.0, 37.3347, 17.4235, 8.13127, 3.79473, 1.77094,
+    0.82647, 0.3857, 0.18
+]
+
+zeta_f = [
+    25.0, 10.6569, 4.5428, 1.93649, 0.825482, 0.351884, 0.15
+]
+
+basis = make_basis(zeta_s, zeta_p, zeta_d, zeta_f)
+'''Z = 36
+zeta_s = [32.83510, 40.94470, 27.45800, 16.06600, 14.29620, 9.10937, 8.37181, 3.84546, 2.57902, 1.77192]   
+zeta_p = [17.03660, 26.04380, 15.51000, 9.45403, 6.57275, 5.38507, 3.15603, 2.02966, 1.42733]                        
+zeta_d = [5.30650, 3.36240, 7.54963, 10.35430, 17.11420]
+
+basis = make_basis(zeta_s, zeta_p, zeta_d)'''
+'''Z = 10
+zeta_s = [
+    223.77400119093372,
+    86.63578676274602,
+    41.33083659206525,
+    21.991523120511687,
+    12.550806233067261,
+    7.5176534282979555,
+    4.657155725010707,
+    2.9317311187249078,
+    1.5802106300743581,
+    0.9834288354375217,
+    0.5891029235880603
+]
+
+zeta_p = [
+    13.228543020680698,
+    6.417232615232208,
+    3.592398419858243,
+    2.154725905283547,
+    1.3220464392751112,
+    0.8020732831543512,
+    0.4962511685628559
+]
+
+basis = make_basis(zeta_s, zeta_p)'''
 
 
 '''Z = 5
@@ -498,13 +497,14 @@ zeta_p = [
 ]
 
 basis = make_basis(zeta_s, zeta_p)
-'''
-N_elec = Z
 
-'''Z = 2
+
+Z = 2
 N_elec = Z
 zeta_s = [13.9074, 8.2187, 26.0325, 11.9249, 4.2635, 2.8357, 2.0715,]
 basis = make_basis(zeta_s)'''
+
+N_elec = Z
 result = scf(basis, Z, N_elec)
 
 print("\nSCF summary:")
@@ -758,27 +758,29 @@ def energy_grad_wrt_param_zeta(param_index, basis, D, W, Z, eri,
 
 
 
-def pack_params(zeta_s, zeta_p):
+def pack_params(zeta_s, zeta_p, zeta_d):
 
     zs = np.array(zeta_s, float)
     zp = np.array(zeta_p, float)
-    return np.log(np.concatenate([zs, zp]))
+    zd = np.array(zeta_d, float)
 
+    return np.log(np.concatenate([zs, zp, zd]))
 
-def unpack_params(x, n_s, n_p):
+def unpack_params(x, n_s, n_p, n_d):
     x = np.array(x, float)
     zetas = np.exp(x)
     zeta_s = zetas[:n_s]
     zeta_p = zetas[n_s:n_s + n_p]
-    return zeta_s, zeta_p
+    zeta_d = zetas[n_s + n_p:n_s + n_p + n_d]
+    return zeta_s, zeta_p, zeta_d
 
 
 
 
 
-def energy_and_grad(x, n_s, n_p):
-    zeta_s, zeta_p = unpack_params(x, n_s, n_p)
-    basis = make_basis(zeta_s, zeta_p)
+def energy_and_grad(x, n_s, n_p, n_d):
+    zeta_s, zeta_p, zeta_d = unpack_params(x, n_s, n_p, n_d)
+    basis = make_basis(zeta_s, zeta_p, zeta_d)
     result = scf(basis, Z, N_elec, max_iter=100, conv=1e-7, damping=0.3)
 
     E = result["E_total"]
@@ -804,26 +806,27 @@ def energy_and_grad(x, n_s, n_p):
         )
 
     # chain rule: dE/d(log ζ) = ζ * dE/dζ
-    zetas_all = np.concatenate([zeta_s, zeta_p])
+    zetas_all = np.concatenate([zeta_s, zeta_p, zeta_d])
     grad_x = g_zeta * zetas_all
 
     return E, grad_x
 
 
 # wrappers for scipy.optimize.minimize
-def objective(x, n_s, n_p):
-    E, _ = energy_and_grad(x, n_s, n_p)
+def objective(x, n_s, n_p, n_d):
+    E, _ = energy_and_grad(x, n_s, n_p, n_d)
     return E
 
 
-def gradient(x, n_s, n_p):
-    _, g = energy_and_grad(x, n_s, n_p)
+def gradient(x, n_s, n_p, n_d):
+    _, g = energy_and_grad(x, n_s, n_p, n_d)
     return g
 
 def quasi_newton_bfgs(
     x_full0,
     n_s,
     n_p,
+    n_d,
     free_idx,
     max_iter=50,
     gtol=1e-5,
@@ -842,7 +845,7 @@ def quasi_newton_bfgs(
     n_free = len(free_idx)
 
     # Initial evaluation
-    E, g_full = energy_and_grad(x_full, n_s, n_p)
+    E, g_full = energy_and_grad(x_full, n_s, n_p, n_d)
     g = g_full[free_idx]
 
     # Initial approximate Hessian (identity in free subspace)
@@ -878,7 +881,7 @@ def quasi_newton_bfgs(
             x_trial = np.log(z_trial)
 
             try:
-                E_trial, g_trial_full = energy_and_grad(x_trial, n_s, n_p)
+                E_trial, g_trial_full = energy_and_grad(x_trial, n_s, n_p, n_d)
             except LA.LinAlgError:
                 # Bad basis (e.g. S not positive definite) -> reduce step
                 step *= 0.5
@@ -931,18 +934,21 @@ def quasi_newton_bfgs(
 
 if __name__ == "__main__":
 
-    Z = 4
-    N_elec = 4
+    Z = 36
+    N_elec = 36
 
-    zeta_s_init = [93.7103745724026, 36.31530927584123, 17.326076791934174, 9.205020166191924, 5.220119627077525, 3.0652717789292354, 1.3075479390829232, 0.708271178970315]
-    #zeta_p_init = [5.328868021859073, 2.504062385838211, 1.302070852874622, 0.7528925618726321]
+    zeta_s_init = [200.09186738, 98.26071268, 76.56309999, 41.74445412, 29.14699252,
+    8.6515247, 3.54010858, 1.48360934, 0.59755947]
+    zeta_p_init = [16.16616549, 6.76495724, 2.23521274, 1.45714073, 0.69797481, 0.28880545]
+    zeta_d_init = [0.78653218, 4.02515718, 1.47362294, 0.89800506] 
 
     n_s = len(zeta_s_init) 
-    #n_p = len(zeta_p_init)  
-    n_p = 0
+    n_p = len(zeta_p_init)  
+    n_d = len(zeta_d_init)
+    #n_p = 0
 
-    #x_full0 = pack_params(zeta_s_init, zeta_p_init)
-    x_full0 = pack_params(zeta_s_init, [])
+    x_full0 = pack_params(zeta_s_init, zeta_p_init, zeta_d_init)
+    #x_full0 = pack_params(zeta_s_init, [])
 
 
   
@@ -954,6 +960,7 @@ if __name__ == "__main__":
         x_full0,
         n_s,
         n_p,
+        n_d,
         free_idx,
         max_iter=50,
         gtol=1e-5,
@@ -961,16 +968,17 @@ if __name__ == "__main__":
         c1=1e-4,
     )
 
-    #zeta_s_opt, zeta_p_opt = unpack_params(x_full_opt, n_s, n_p)
+    zeta_s_opt, zeta_p_opt, zeta_d_opt = unpack_params(x_full_opt, n_s, n_p, n_d)
     zeta_s_opt = unpack_params(x_full_opt, n_s, n_p)
     zeta_s_opt, zeta_p_opt = unpack_params(x_full_opt, n_s, 0)
     zeta_s_opt = np.asarray(zeta_s_opt, dtype=float).ravel().tolist()
 
     print("\nOptimized zeta_s:", zeta_s_opt)
     print("Optimized zeta_p:", zeta_p_opt)
+    print("Optimized zeta_d:", zeta_d_opt)
 
-    #basis_opt = make_basis(zeta_s_opt, zeta_p_opt)
-    basis_opt = make_basis(zeta_s_opt)
+    basis_opt = make_basis(zeta_s_opt, zeta_p_opt, zeta_d_opt)
+    #basis_opt = make_basis(zeta_s_opt)
 
     result_opt = scf(basis_opt, Z, N_elec, max_iter=150, conv=1e-7, damping=0.3)
 
