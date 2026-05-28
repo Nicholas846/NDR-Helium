@@ -55,7 +55,7 @@ def ao_to_mo_transform(eri_ao, C):
     tmp = np.dot(C.T, tmp).reshape(n, n, n, n)
     
 
-    return tmp.transpose(2, 3, 0, 1)
+    return tmp.transpose(3, 2, 1, 0)
 
 def build_spin_orbital_integrals(h_mo, eri_mo):
 
@@ -72,6 +72,7 @@ def build_spin_orbital_integrals(h_mo, eri_mo):
         for r in range(n_mo):
             for q in range(n_mo):
                 for s in range(n_mo):
+
                     val = eri_mo[p, r, q, s]
             
                     g_spin[2*p, 2*q, 2*r, 2*s] = val

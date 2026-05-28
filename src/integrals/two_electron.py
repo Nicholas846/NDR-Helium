@@ -101,7 +101,6 @@ def electron_repulsion_integral(bi, bj, bk, bl, deriv=False):
             A_L = angular_part(bi, bj, bk, bl, L)
             if abs(A_L) > 1e-15:
                 if deriv:
-                    # Capture the radial derivatives you already implemented
                     R_L, dR_dp, dR_dq = radial_repulsion_integral(bi, bj, bk, bl, L, deriv=True)
                     total_val += A_L * R_L
                     # Since p = zeta_i + zeta_j, dR/d_zeta_i = dR/dp

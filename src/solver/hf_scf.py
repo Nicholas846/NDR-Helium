@@ -92,6 +92,10 @@ def scf(basis, Z, N_elec, max_iter=150, conv=1e-7, damping=0.3):
         E_tot = np.trace(D_new @ H_core) + 0.5 * np.trace(D_new @ (J_final + K_final))
 
         if abs(E_tot - E_old) < conv:
+
+            sort_idx = np.argsort(eps_new_full)
+            eps_new_full = eps_new_full[sort_idx]
+            C_new_full = C_new_full[:, sort_idx]
             return {
                 "E_total": E_tot,
                 "orb_energies": eps_new_full,
@@ -105,11 +109,15 @@ def scf(basis, Z, N_elec, max_iter=150, conv=1e-7, damping=0.3):
 
         D, E_old = D_new, E_tot
 
+    sort_idx = np.argsort(eps_new_full)
+    C_sorted = C_new_full[:, sort_idx]
+    eps_sorted = eps_new_full[sort_idx]
+
     return {
         "E_total": E_tot, 
         "density": D, 
-        "orb_energies": eps_new_full,
-        "coefficients": C_new_full,
+        "orb_energies": eps_sorted,
+        "coefficients": C_sorted,
         "H_core": H_core, 
         "eri": eri, 
         "n_elec": N_elec,
